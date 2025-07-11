@@ -64,7 +64,7 @@ class promotores
         echo "Sp: $idSponsor\n";
         echo "De: $idDelegado\n";
 
-        $R = dbExecSP("dbo.sp_contactoAdd", [
+        $R = dbExecSP("dbo.sp_pr_contactoAdd", [
             "idContacto" => 0, // 0 para agregar un nuevo contacto
             "dni" => $dni,
             "telefono" => $telefono,
@@ -150,7 +150,7 @@ class promotores
         if (!$usuario || !$clave) {
             throw new Exception("Invalid Data"); // esto llega en la respuesta de la api como {"error": "Invalid Data"}
         }
-        $R = dbExecSP("dbo.sp_validarPrUsuario", [
+        $R = dbExecSP("dbo.sp_pr_validarUsuario", [
             "usuario" => $usuario,
             "clave" => md5($clave)
         ]);
@@ -192,7 +192,7 @@ class promotores
             throw new Exception("Invalid Data"); // esto llega en la respuesta de la api como {"error": "Invalid Data"}
         }
 
-        $R = dbExecSP("dbo.sp_promotorAdd", [
+        $R = dbExecSP("dbo.sp_pr_promotorAdd", [
             "idPromotor" => $idPromotor,
             "nombre" => $nombre,
             "idLider" => $idLider,
@@ -220,7 +220,7 @@ class promotores
             throw new Exception("Invalid Data"); // esto llega en la respuesta de la api como {"error": "Invalid Data"}
         }
 
-        $R = dbExecSP("dbo.sp_sponsorAdd", [
+        $R = dbExecSP("dbo.sp_pr_sponsorAdd", [
             "idSponsor" => $idSponsor,
             "nombre" => $nombre,
             "idPromotor" => $idPromotor,
@@ -246,7 +246,7 @@ class promotores
             throw new Exception("Invalid Data"); // esto llega en la respuesta de la api como {"error": "Invalid Data"}
         }
 
-        $R = dbExecSP("dbo.sp_delegadoAdd", [
+        $R = dbExecSP("dbo.sp_pr_delegadoAdd", [
             "idDelegado" => $idDelegado,
             "nombre" => $nombre,
             "idPromotor" => $idPromotor,
@@ -272,7 +272,7 @@ class promotores
             throw new Exception("Invalid Data"); // esto llega en la respuesta de la api como {"error": "Invalid Data"}
         }
     
-        $R = dbExecSP("dbo.sp_contactoAdd", [
+        $R = dbExecSP("dbo.sp_pr_contactoAdd", [
             "idContacto" => $idContacto,
             "dni" => $dni,
             "telefono" => $telefono,
@@ -303,7 +303,7 @@ class promotores
             throw new Exception("Invalid Data"); // esto llega en la respuesta de la api como {"error": "Invalid Data"}
         }
     
-        $R = dbExecSP("dbo.sp_getContactos", [
+        $R = dbExecSP("dbo.sp_pr_getContactos", [
             "idPromotor" => $idPromotor,
             "idSponsor" => $idSponsor,
             "idDelegado" => $idDelegado,
@@ -329,7 +329,7 @@ class promotores
         if (!$tipo) {
             throw new Exception("Invalid Data"); // esto llega en la respuesta de la api como {"error": "Invalid Data"}
         }
-        $R = dbExecSP("dbo.sp_getPSD", [
+        $R = dbExecSP("dbo.sp_pr_getPSD", [
             "tipo" => $tipo
        ],TRUE);
 
@@ -345,7 +345,7 @@ class promotores
     public function getLideres()
     {
     
-        $R = dbExecSP("dbo.sp_getLideres", [] ,TRUE);
+        $R = dbExecSP("dbo.sp_pr_getLideres", [] ,TRUE);
 
 
         if (!$R) {
@@ -359,7 +359,7 @@ class promotores
     public function getZonas()
     {
     
-        $R = dbExecSP("dbo.sp_getZonas", [],TRUE);
+        $R = dbExecSP("dbo.sp_pr_getZonas", [],TRUE);
 
 
         if (!$R) {
