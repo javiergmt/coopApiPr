@@ -1,6 +1,6 @@
 <?php
 
-function db_connect($base,$servidor,$usuario,$password)
+function db_connect()
 {
     global $DB;
     if ($DB) {
@@ -8,15 +8,37 @@ function db_connect($base,$servidor,$usuario,$password)
         return $DB;
     }
     try {
-        $DB = new PDO("sqlsrv:Server=$servidor;Database=$base", $usuario, $password, array(
+    
+
+        $archivo = 'local.txt';
+
+        if (file_exists($archivo)) {
+            $usr = "sa";
+            $pwd = "6736";
+            $db = "Externo_Comercios";
+            $host = ".\SQLEXPRESS";
+            $DB = new PDO("sqlsrv:Server=$host;Database=$db", $usr, $pwd, array(
             PDO::SQLSRV_ATTR_DIRECT_QUERY => TRUE,
             PDO::ATTR_EMULATE_PREPARES => TRUE,
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_STRINGIFY_FETCHES => FALSE,
             PDO::SQLSRV_ATTR_FETCHES_NUMERIC_TYPE => TRUE
-        ));
+            ));
+        } else {
+            $usuario = getUsuario();
+            $password = getPassword();
+            $db = getDb();
+            $DB = new PDO("sqlsrv:Server=172.30.1.39;MultipleActiveResultSets=0;TrustServerCertificate=1;Database=".$db, $usuario, $password, array(
+            PDO::SQLSRV_ATTR_DIRECT_QUERY => TRUE,
+            PDO::ATTR_EMULATE_PREPARES => TRUE,
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_STRINGIFY_FETCHES => FALSE,
+            PDO::SQLSRV_ATTR_FETCHES_NUMERIC_TYPE => TRUE
+            ));
+        }
+        
         if (!$DB) {
-            throw new Exception("Imposible conectar a la Base de Datos: " . $base . " en el servidor: " . $servidor);
+            throw new Exception("Imposible conectar a la Base de Datos: ");
         }
         //echo "Conexion ok!\n";
         $DB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -37,13 +59,9 @@ function dbExecSP(string $storeName, array $params = array(), $fetchAll = FALSE)
 
     //echo "SQL: $SQL\n";
 
-    $usr = "sa";
-    $pwd = "6736";
-    $db = "Externo_Comercios";
-    $host = ".\SQLEXPRESS";
-
-    if (!$stmt = db_connect($db,$host,$usr,$pwd)->prepare($SQL)) {
-        throw new Exception("Error al conectar a la Base de Datos: " . $db . " en el servidor: " . $host);
+    
+    if (!$stmt = db_connect()->prepare($SQL)) {
+        throw new Exception("Error al conectar a la Base de Datos: ");
     }
     try {
         $stmt->execute(array_values($params));

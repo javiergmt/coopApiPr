@@ -2,6 +2,8 @@
 // librerias necesarias
 include_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . "libs" . DIRECTORY_SEPARATOR . "reflect.php"); // esta libreria es la que se encarga de llamar a los servicios
 include_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . "libs" . DIRECTORY_SEPARATOR . "db.php"); // esta libreria es la que se encarga de conectar a la base de datos y ejecutar los stored procedures
+include_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . "libs" . DIRECTORY_SEPARATOR . "funciones.php"); // esta libreria es la que se encarga de conectar a la base de datos y ejecutar los stored procedures
+
 date_default_timezone_set("America/Buenos_Aires"); // se establece la zona horaria de Buenos Aires
 
 // esta api siempre responde en formato JSON
@@ -106,7 +108,6 @@ try {
     echo "\n";
 
     $R = $Processor->execute($data['service'], $data['method'], ((isset($data['params']) && $data['params'] && is_array($data['params'])) ? $data['params'] : []));
-
     
     // Si el resultado es un array y tiene una clave "error", se devuelve ese error
     // si dentro del mensaje de error hay una referencia a SQLSTATE, schema o DATABASE, se devuelve un mensaje genérico por seguridad, por si en el error hay información sensible

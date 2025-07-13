@@ -1,6 +1,5 @@
 <?php
 
-include_once(__DIR__ . '/../funciones.php');
 error_reporting(0);
 
 class promotores
@@ -13,13 +12,16 @@ class promotores
         }
         $hora = date("H:i");
         //$telefono = '5492215231902';
+       
+        $telefono = str_replace("-", "", $telefono); // se eliminan los guiones del telefono
+        $telefono = "549".$telefono;       
         $uid = 'paolab';
         $template = 'error';
         $tipo = substr($id, 0, 1); // P, S o D
         $id = substr($id, 1); // el resto del id codificado
 
         // Se obtiene el template de la base de datos, en este caso se usa un SP que devuelve el template segun el tipo y hora
-        $R = dbExecSP("dbo.sp_getTemplate", [
+        $R = dbExecSP("dbo.sp_pr_getTemplate", [
             "tipo" => $tipo,
             "hora" => $hora
         ]);
@@ -34,13 +36,13 @@ class promotores
                 throw new Exception("Template no encontrado en el resultado del SP"); // si no se encuentra el template, se lanza una excepción
             }
         }
-
+        /*
         echo "Tipo: $tipo\n";
         echo "ID: $id\n";
         echo "DNI: $dni\n";
         echo "Teléfono: $telefono\n";   
         echo "Template: $template\n";
-        
+        */
         $idEstado = 1;
         if ($template == 'error') {
             $idEstado = 0; // Si el template es error, se asigna un estado de error
@@ -51,19 +53,21 @@ class promotores
         $idDelegado = 0; // Se debe definir el id del delegado
 
         if ($tipo == 'P') {
-            $idPromotor = $id;
+            $idPromotor = decodeStr($id);
         } elseif ($tipo == 'S') {
-            $idSponsor = $id;
+            $idSponsor = decodeStr($id);
         } elseif ($tipo == 'D') {
-            $idDelegado = $id;
+            $idDelegado = decodeStr($id);
         } else {
             throw new Exception("Tipo de ID no valido: $tipo"); // si el tipo no es P, S o D, se lanza una excepción
         }   
 
+        /*
         echo "Pr: $idPromotor\n";
         echo "Sp: $idSponsor\n";
         echo "De: $idDelegado\n";
-
+        */
+        
         $R = dbExecSP("dbo.sp_pr_contactoAdd", [
             "idContacto" => 0, // 0 para agregar un nuevo contacto
             "dni" => $dni,
@@ -171,7 +175,7 @@ class promotores
         return $R;
     }
 
-       public function logout()
+    public function logout()
     {
         // Limpiar la sesión actual
         $_SESSION = [];
