@@ -75,8 +75,8 @@ class promotores
             "idPromotor" => $idPromotor, // Se debe definir el id del promotor
             "idSponsor" => $idSponsor, // Se debe definir el id del sponsor
             "idDelegado" => $idDelegado, // Se debe definir el id del delegado
-            "fecha" => date("d/m/Y"), // Fecha actual
-            //"fecha" => "07/11/2025", // Fecha actual
+            //"fecha" => date("m/d/Y"), // Fecha actual
+            "fecha" => "07/11/2025", // Fecha actual
             "hora" => $hora,
             "idEstado" => $idEstado // Estado inicial del contacto, se debe definir
         ]);

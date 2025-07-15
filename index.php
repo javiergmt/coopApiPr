@@ -1,4 +1,33 @@
 <?php
+$allowed_origins = [
+    'https://comercios.cooperativalaplata.com.ar',
+    'http://comercios2.cooperativalaplata.com.ar:5173',
+	'http://localhost:5173'
+];
+
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+
+if (in_array($origin, $allowed_origins)) {
+    header("Access-Control-Allow-Origin: $origin");
+    header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+    header("Access-Control-Allow-Credentials:true");
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
+
+session_set_cookie_params([
+    'lifetime' => 0,  // Session cookie will expire when the browser closes
+    'path' => '/',
+    //'domain' => 'yourdomain.com',
+    'secure' => true,  // Only send cookie over HTTPS
+    'httponly' => true, // Prevent JavaScript access to the cookie
+    'samesite' => 'None'
+]);
+
 // librerias necesarias
 include_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . "libs" . DIRECTORY_SEPARATOR . "reflect.php"); // esta libreria es la que se encarga de llamar a los servicios
 include_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . "libs" . DIRECTORY_SEPARATOR . "db.php"); // esta libreria es la que se encarga de conectar a la base de datos y ejecutar los stored procedures
@@ -103,9 +132,9 @@ try {
 
     $Processor = new callServiceMethod();
     
-    echo "Parametros recibidos: ";
-    echo json_encode($data['params']);
-    echo "\n";
+    //echo "Parametros recibidos: ";
+    //echo json_encode($data['params']);
+    //echo "\n";
 
     $R = $Processor->execute($data['service'], $data['method'], ((isset($data['params']) && $data['params'] && is_array($data['params'])) ? $data['params'] : []));
     
